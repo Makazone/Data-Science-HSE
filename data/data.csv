@@ -1,4 +1,4 @@
-Designation,Discovery Date YYYY-MM-DD,H (mag),MOID (AU),q (AU),Q (AU),PHA,period (yr),Orbit Class
+designation,discovery_date,H,MOID,q,Q,PHA,period,orbit_class
 (2010 KY127),05/31/2010,17,0.703,0.3,4.7,N,3.95,Apollo
 (2010 MU111),06/23/2010,18.7,0.059,0.92,3.86,N,3.7,Apollo
 (2010 MY112),06/23/2010,21,0.156,0.8,1.33,N,1.1,Apollo
