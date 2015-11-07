@@ -27,7 +27,7 @@ n <- nrow(data)
 m <- mean(selectedFeature)
 s <- sd(selectedFeature)
 conf.int <- c(m - 1.965 * s / sqrt(n), m + 1.965 * s / sqrt(n))
-cat(sprintf("CI = (%f; %f)", conf.int[1], conf.int[2]))
+cat(sprintf("CI = (%f; %f)\n", conf.int[1], conf.int[2]))
 
 # Bootstrapping
 # pivotal
@@ -40,9 +40,9 @@ hist(means) # like a normal, bitch! to-do-do-do-to-do-do...
 m <- mean(means)
 s <- sd(means)
 pivotal.conf.int <- c(m - 1.965 * s / sqrt(n), m + 1.965 * s / sqrt(n))
-cat(sprintf("PCI = (%f; %f)", pivotal.conf.int[1], pivotal.conf.int[2]))
+cat(sprintf("PCI = (%f; %f)\n", pivotal.conf.int[1], pivotal.conf.int[2]))
 
 # nonpivotal
 sorted.means  <- sort(means)
 nonpivotal.conf.int <- c(sorted.means[0.025 * n], sorted.means[n - 0.025 * n])
-cat(sprintf("NPCI = (%f; %f)", nonpivotal.conf.int[1], nonpivotal.conf.int[2]))
+cat(sprintf("NPCI = (%f; %f)\n", nonpivotal.conf.int[1], nonpivotal.conf.int[2]))
