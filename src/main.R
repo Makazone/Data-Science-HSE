@@ -2,6 +2,8 @@ data = read.csv("data/data.csv", sep = ",")
 # We select H (Magnitude) as our mama
 selectedFeature = data$H
 
+##### TASK 1 ######
+
 # Build histogram 
 hist(selectedFeature, main = "Distribution of H", xlab = "H", breaks = 8)
 
@@ -21,6 +23,18 @@ Mode(selectedFeature)
 # median and mean
 median(selectedFeature)
 mean(selectedFeature)
+
+# What if we delete outliers
+outliers = boxplot(selectedFeature, plot=FALSE)$out
+featureNoOutliers = selectedFeature[-match(outliers, selectedFeature)]
+
+# and recompute some staff
+Mode(featureNoOutliers)
+median(featureNoOutliers)
+mean(featureNoOutliers)
+mean(Mode(featureNoOutliers))
+
+##### TASK 2 ######
 
 # Confidence interval
 n <- nrow(data)
