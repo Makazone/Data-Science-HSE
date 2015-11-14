@@ -1,8 +1,8 @@
 data = read.csv("data/data.csv", sep = ",")
 attach(data) # helps to avoid writing data$Q everytime
 
-# Scatter plot of all features, except PHA and discovery_date
-pairs(~H+MOID+q+Q+period, data=data, main="Scatterplot Matrix")
+# Scatter plot of all features, discovery_date
+pairs(~H+MOID+q+Q+period+PHA, data=data, main="Scatterplot Matrix")
 
 # Looks like we have a strong correlation! Ya!
 plot(Q, period, main="Scatterplot of Q vs period",  xlab="Q", ylab="period", pch=19)
