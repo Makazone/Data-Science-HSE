@@ -32,7 +32,7 @@ correlation = 1 - (sigma.w) / sd(data$q)^2
 
 # Part 2
 
-mosaicplot(orbit_class~PHA)
+mosaicplot(orbit_class~PHA, main="", xlab="Orbit Class")
 
 cont.table = table(orbit_class, PHA)
 print(cont.table)
