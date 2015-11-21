@@ -29,3 +29,22 @@ sigma.w = sum(
                 }))
 )
 correlation = 1 - (sigma.w) / sd(data$q)^2
+
+# Part 2
+
+mosaicplot(orbit_class~PHA)
+cont.table = table(orbit_class, PHA)
+print(cont.table)
+
+norm.cont.table = cont.table / nrow(data)
+print(norm.cont.table)
+
+norm.row.sums = rowSums(cont.table) / nrow(data)
+norm.col.sums = colSums(cont.table) / nrow(data)
+q.table = norm.cont.table / (norm.row.sums * norm.col.sums) - 1
+print(q.table)
+
+max(q.table)
+
+Q = sum(norm.cont.table^2/(norm.row.sums*norm.col.sums))-1
+print(Q)
