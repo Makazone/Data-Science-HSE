@@ -33,18 +33,26 @@ correlation = 1 - (sigma.w) / sd(data$q)^2
 # Part 2
 
 mosaicplot(orbit_class~PHA)
+
 cont.table = table(orbit_class, PHA)
 print(cont.table)
 
 norm.cont.table = cont.table / nrow(data)
 print(norm.cont.table)
 
-norm.row.sums = rowSums(cont.table) / nrow(data)
-norm.col.sums = colSums(cont.table) / nrow(data)
-q.table = norm.cont.table / (norm.row.sums * norm.col.sums) - 1
-print(q.table)
+norm.row.sums = rowSums(norm.cont.table) 
+norm.col.sums = colSums(norm.cont.table) 
 
-max(q.table)
+size = dim(norm.cont.table)
+ketleMatrix = matrix(1:length(norm.cont.table), nrow=size[1], ncol=size[2])
+for (rowIndex in 1:size[1]) {
+  for (colIndex in 1:size[2]) {
+    ketleMatrix[rowIndex, colIndex] = norm.cont.table[rowIndex,colIndex] / (norm.row.sums[rowIndex] * norm.col.sums[colIndex]) - 1
+  }
+}
+print(ketleMatrix)
 
-Q = sum(norm.cont.table^2/(norm.row.sums*norm.col.sums))-1
+max(ketleMatrix)
+
+Q = sum(ketleMatrix*norm.cont.table)
 print(Q)
