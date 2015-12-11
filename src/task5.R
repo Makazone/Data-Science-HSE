@@ -1,7 +1,7 @@
 full_data = read.csv("data/sasha_data.csv", sep = ",")
 attach(full_data)
 
-full_data = full_data[which(Leuc < 1000), ]
+full_data = full_data[which(Leuc < 500 & Tod < 2), ]
 
 # Ну, у нас данные по детям, у которых лейкоз (назовём их ЛЕЙКОДЕТИ)
 # Надо выбрать какой-то целевой признак, зависящий от других признаков, 
@@ -77,8 +77,8 @@ table(target.predict, target.test)
 target.predict <- knn(data.train, data.test, target.train, k = 3)
 table(target.predict, target.test)
 
-target.predict  <- knn(data.train, data.test, target.train, k = 5)
-table(target.predict, target.test)
+target.predict  <- knn(data, data, full_data[, "Tod"], k = 3)
+table(target.predict, full_data$Tod)
 
 target.predict  <- knn(data.train, data.test, target.train, k = 7)
 table(target.predict, target.test)
@@ -105,21 +105,22 @@ data = full_data[includedVars]
 
 # Age 
 buckets = hist(data$Age, breaks=8)$breaks
-data$Age_q = 0
+data$Age_q = 2
 for(i in 2:length(buckets)) {
   if (nrow(data[which(Age > buckets[i-1] & Age <= buckets[i]),]) > 0) {
-    data[data$Age > buckets[i-1] & data$Age <= buckets[i],]$Age_q = i
+    data[which(Age > buckets[i-1] & Age <= buckets[i]),]$Age_q = i
   }
 }
 data$Age_q = as.factor(data$Age_q)
 data[, "Age"] <- NULL
 
 # Leuc
-buckets = hist(data$Leuc, breaks=500)$breaks
-data$Leuc_q = 0
+buckets = hist(data$Leuc)$breaks
+data$Leuc_q = 2
 for(i in 2:length(buckets)) {
   if (nrow(data[which(Leuc > buckets[i-1] & Leuc <= buckets[i]),]) > 0) {
-    data[data$Leuc > buckets[i-1] & data$Leuc <= buckets[i],]$Leuc_q = i
+    data[which(Leuc > buckets[i-1] & Leuc <= buckets[i]),]$Leuc_q = i
+#    data[data$Leuc > buckets[i-1] & data$Leuc <= buckets[i],]$Leuc_q = i
   }
 }
 data$Leuc_q = as.factor(data$Leuc_q)
@@ -127,10 +128,10 @@ data[, "Leuc"] <- NULL
 
 # Leber
 buckets = hist(data$Leber)$breaks
-data$Leber_q = 0
+data$Leber_q = 2
 for(i in 2:length(buckets)) {
   if (nrow(data[which(Leber > buckets[i-1] & Leber <= buckets[i]),]) > 0) {
-    data[data$Leber > buckets[i-1] & data$Leber <= buckets[i],]$Leber_q = i
+    data[which(Leber > buckets[i-1] & Leber <= buckets[i]),]$Leber_q = i
   }
 }
 data$Leber_q = as.factor(data$Leber_q)
@@ -138,10 +139,10 @@ data[, "Leber"] <- NULL
 
 # Milz
 buckets = hist(data$Milz)$breaks
-data$Milz_q = 0
+data$Milz_q = 2
 for(i in 2:length(buckets)) {
   if (nrow(data[which(Milz > buckets[i-1] & Milz <= buckets[i]),]) > 0) {
-    data[data$Milz > buckets[i-1] & data$Milz <= buckets[i],]$Milz_q = i
+    data[which(Milz > buckets[i-1] & Milz <= buckets[i]),]$Milz_q = i
   }
 }
 data$Milz_q = as.factor(data$Milz_q)
@@ -152,9 +153,9 @@ data$Tod = as.factor(data$Tod)
 target = full_data[,"Tod"] 
 
 model = naiveBayes(data$Tod ~ ., data = data[, 2:ncol(data)])
-predict(model, data[1:10,])
+predict(model, data)
 
-pred = predict(model, data[1:10, ])
-table(pred, target)
+pred = predict(model, data)
+table(pred, data[, "Tod"])
 
 # P.S.: Все комментарии были написаны в невменяемом состоянии. Возможно, они помогут накрапать отчёт
