@@ -1,7 +1,29 @@
-full_data = read.csv("data/sasha_data.csv", sep = ",")
+full_data = read.csv("data/agaricus-lepiota.data.txt")
 attach(full_data)
 
-full_data = full_data[which(Leuc < 500 & Tod < 2), ]
+full_data = full_data[which(Leuc < 900 & Tod < 2), ]
+
+pairs(~Leuc+Age+Milz+Leber, data=full_data, main="Scatterplot Matrix")
+
+library(ggvis)
+#data = subset(full_data, Leuc < 10)
+#data %>% ggvis(~data$Age, ~data$Leuc) %>% layer_points(fill = ~factor(data$Tod))
+
+data = full_data[, 2:ncol(full_data)]
+
+featureNames = names(data)
+for i in 1:ncol(featureNames) {
+  
+}
+
+full_data$x = as.numeric(full_data$x)
+full_data$s = as.numeric(full_data$s)
+full_data$f = as.numeric(full_data$f)
+full_data$e.1 = as.numeric(full_data$e.1)
+full_data$o = as.numeric(full_data$o)
+full_data$o = as.numeric(full_data$o)
+
+full_data %>% ggvis(~full_data$e, ~full_data$n) %>% layer_points(fill = ~factor(full_data$p))
 
 # Ну, у нас данные по детям, у которых лейкоз (назовём их ЛЕЙКОДЕТИ)
 # Надо выбрать какой-то целевой признак, зависящий от других признаков, 
@@ -39,7 +61,7 @@ full_data = full_data[which(Leuc < 500 & Tod < 2), ]
 # ────────▀███████████▀────────
 
 # Выбираем только количественные признаки
-includedVars = c("Age", "Leuc", "Leber", "Milz") 
+includedVars = c("x", "s", "f", "e.1", "o") 
 data = full_data[includedVars]
 
 normalize = function(x) {
@@ -77,8 +99,8 @@ table(target.predict, target.test)
 target.predict <- knn(data.train, data.test, target.train, k = 3)
 table(target.predict, target.test)
 
-target.predict  <- knn(data, data, full_data[, "Tod"], k = 3)
-table(target.predict, full_data$Tod)
+target.predict  <- knn(data, data, full_data[, "p"], k = 7)
+table(target.predict, full_data$p)
 
 target.predict  <- knn(data.train, data.test, target.train, k = 7)
 table(target.predict, target.test)
