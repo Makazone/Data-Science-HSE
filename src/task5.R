@@ -84,6 +84,56 @@ table(target.predict, full_data$Tod)
 target.predict  <- knn(data.train, data.test, target.train, k = 7)
 table(target.predict, target.test)
 
+# ----------------- №3 - start -------------------
+# kNN: k - number of neighbours considered
+
+N = nrow(data)
+
+target = full_data[, 'Tod'] 
+data   = as.data.frame(lapply(data, normalize))
+
+set.seed(1228)
+smp.size <- N
+train.id <- sample(c(1:N), size = smp.size)
+
+data.train <- data[train.id,]
+data.test <- data[-train.id,]
+target.train  <- target[train.id]
+target.test <- target[-train.id]
+
+target.predict = knn(data.train, data, target, k = 1)
+table(target.predict, target)
+#               target
+# target.predict    0    1    2
+#              0 1798   19  177
+#              1   17    1    2
+#              2  179    0   21
+
+target.predict <- knn(data.train, data, target, k = 3)
+table(target.predict, target)
+#               target
+# target.predict    0    1    2
+#              0 1933   20  195
+#              1    1    0    0
+#              2   60    0    5
+
+target.predict  <- knn(data, data, full_data[, "Tod"], k = 3)
+table(target.predict, full_data$Tod)
+# target.predict    0    1    2
+#              0 1978   17  159
+#              1    0    2    1
+#              2   16    1   40
+
+target.predict  <- knn(data.train, data, target, k = 7)
+table(target.predict, target)
+#               target
+# target.predict    0    1    2
+#              0 1994   20  199
+#              1    0    0    0
+#              2    0    0    1
+
+# ----------------- №3 - end -------------------
+
 # Метод номер два
 includedVars = c("Tod", "Age", "Leuc", "Leber", "Milz") 
 data = full_data[includedVars]
@@ -156,5 +206,11 @@ predict(model, data)
 pred = predict(model, data)
 table(pred, data[, "Tod"])
 
-# P.S.: Все комментарии были написаны в невменяемом состоянии. Возможно, они помогут накрапать отчёт
+# ----------------- №3 - start -------------------
+# pred    0    1    2
+#    0 1992   18  195
+#    1    0    2    0
+#    2    2    0    5
+# ----------------- №3 - end -------------------
 
+# P.S.: Все комментарии были написаны в невменяемом состоянии. Возможно, они помогут накрапать отчёт
