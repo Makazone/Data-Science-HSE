@@ -57,7 +57,7 @@ normalize = function(x) {
 # Метод номер раз
 N = nrow(data)
 
-target = full_data[c('Tod')] 
+target = full_data[, 'Tod'] 
 data   = as.data.frame(lapply(data, normalize))
 
 set.seed(1228)
@@ -68,8 +68,6 @@ data.train <- data[train.id,]
 data.test <- data[-train.id,]
 target.train  <- target[train.id]
 target.test <- target[-train.id]
-
-library(class)
 
 target.predict = knn(data.train, data.test, target.train, k = 1)
 table(target.predict, target.test)
@@ -115,7 +113,7 @@ data$Age_q = as.factor(data$Age_q)
 data[, "Age"] <- NULL
 
 # Leuc
-buckets = hist(data$Leuc)$breaks
+buckets = hist(data$Leuc, breaks=800)$breaks
 data$Leuc_q = 2
 for(i in 2:length(buckets)) {
   if (nrow(data[which(Leuc > buckets[i-1] & Leuc <= buckets[i]),]) > 0) {
