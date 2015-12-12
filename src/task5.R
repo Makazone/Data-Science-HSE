@@ -1,6 +1,20 @@
 library(e1071)
 library(class)
 
+# Все любят котиков!
+#   /\     /\
+#  {  `---'  }
+#  {  O   O  }  
+#~~|~   V   ~|~~  
+#   \  \|/  /   
+#    `-----'__
+#    /     \  `^\_
+#   {       }\ |\_\_   W
+#   |  \_/  |/ /  \_\_( )
+#    \__/  /(_E     \__/
+#      (  /
+#       MM
+
 full_data = read.csv("data/sasha_data.csv", sep = ",")
 attach(full_data)
 
@@ -173,6 +187,58 @@ table(target.predict, target)
 # F = 0.4382928799
 
 # ----------------- №3 - end -------------------
+
+# ----------------- №4 - start -------------------
+N = nrow(data)
+
+target = full_data[, 'Tod'] 
+data   = as.data.frame(lapply(data, normalize))
+
+set.seed(1228)
+
+smp.size <- N - 1
+for (i in 1:N) {
+  values = c(1:N)
+  remove = c(i)
+  setdiff(values, remove)
+  
+  train.id <- sample(values, size = smp.size)
+  
+  data.train <- data[train.id,]
+  data.test <- data[-train.id,]
+  target.train  <- target[train.id]
+  target.test <- target[-train.id]
+  
+  target.predict = knn(data.train, data.test, target.train, k = 1)
+  tab_1 = table(target.predict, target.test)
+  
+  target.predict <- knn(data.train, data.test, target.train, k = 3)
+  tab_2 = table(target.predict, target.test)
+  
+  target.predict  <- knn(data, data, full_data[, "Tod"], k = 3)
+  tab_3 = table(target.predict, full_data$Tod)
+  
+  target.predict = knn(data.train, data.test, target.train, k = 7)
+  tab_4 = table(target.predict, target.test)
+  
+  if (i == 1) {
+    result_table_1 = tab_1
+    result_table_2 = tab_2
+    result_table_3 = tab_3
+    result_table_4 = tab_4
+  } else {
+    result_table_1 = result_table_1 + tab_1
+    result_table_2 = result_table_2 + tab_2
+    result_table_3 = result_table_3 + tab_3
+    result_table_4 = result_table_4 + tab_4
+  }
+}
+result_table_1
+result_table_2
+result_table_3
+result_table_4
+
+# ----------------- №4 - end -------------------
 
 # Метод номер два
 includedVars = c("Tod", "Age", "Leuc", "Leber", "Milz") 
