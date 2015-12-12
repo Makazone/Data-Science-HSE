@@ -1,7 +1,7 @@
 full_data = read.csv("data/sasha_data.csv", sep = ",")
 attach(full_data)
 
-full_data = full_data[which(Leuc < 500 & Tod < 2), ]
+full_data = full_data[which(Leuc < 1000), ]
 
 # Ну, у нас данные по детям, у которых лейкоз (назовём их ЛЕЙКОДЕТИ)
 # Надо выбрать какой-то целевой признак, зависящий от других признаков, 
