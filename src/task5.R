@@ -1,3 +1,6 @@
+library(e1071)
+library(class)
+
 full_data = read.csv("data/sasha_data.csv", sep = ",")
 attach(full_data)
 
@@ -82,9 +85,6 @@ target.predict  <- knn(data.train, data.test, target.train, k = 7)
 table(target.predict, target.test)
 
 # Метод номер два
-# install.packages('e1071')
-library(e1071)
-
 includedVars = c("Tod", "Age", "Leuc", "Leber", "Milz") 
 data = full_data[includedVars]
 
@@ -157,3 +157,4 @@ pred = predict(model, data)
 table(pred, data[, "Tod"])
 
 # P.S.: Все комментарии были написаны в невменяемом состоянии. Возможно, они помогут накрапать отчёт
+
