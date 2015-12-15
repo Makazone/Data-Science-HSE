@@ -1,5 +1,6 @@
 library(e1071)
 library(class)
+library(ggplot2)
 
 # ─────────────NYA────────────────────────
 # ───▐▀▄───────▄▀▌───▄▄▄▄▄▄▄─────────────
@@ -18,13 +19,21 @@ library(class)
 # ──▐▄▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▄▌──────
 # ────▀▄▄▀▀▀▀▀▄▄▀▀▀▀▀▀▀▄▄▀▀▀▀▀▄▄▀────────
 
-full_data = read.csv("data/sasha_data.csv", sep = ",")
-attach(full_data)
+full_data = read.table("data/seeds_dataset.txt")
+# 1. area A, 
+# 2. perimeter P, 
+# 3. compactness C = 4*pi*A/P^2, 
+# 4. length of kernel, 
+# 5. width of kernel, 
+# 6. asymmetry coefficient 
+# 7. length of kernel groove. 
+# 8. Type = Kama, Rosa and Canadian
+colnames(full_data) = c("Area", "Perimeter", "Compactness", "Length_k", "Width_k", "Asymmetry", "Groove_g", "Type")
 
-full_data = full_data[which(Leuc < 1000), ]
+# Since Compactness can be computed from Area and Perimeter, we exclude it 
+full_data = subset(full_data, select = -Compactness)
 
-includedVars = c("Age", "Leuc", "Leber", "Milz") 
-data = full_data[includedVars]
+data = subset(full_data, select = -Type)
 
 normalize = function(x) {
   y = (x - min(x))/(max(x) - min(x))
@@ -34,16 +43,13 @@ normalize = function(x) {
 data = as.data.frame(lapply(data, normalize))
 
 # -------------------- #
-
-includedVars = c("Q", "q", "MOID", "H", "period") 
-data = read.csv("data/data.csv", sep = ",")
-data = data[includedVars]
-data = as.data.frame(lapply(data, normalize))
-
-km.out=kmeans(data, 2,nstart=20)
+km.out=kmeans(data, 3, nstart=20)
 km.out$cluster
 
-plot(data, col=(km.out$cluster+1), main="K-Means Clustering Results with K=2", pch=20, cex=2)
-
-
-
+ggplot(data, aes(Area, Groove_g)) + 
+  aes(shape = factor(full_data$Type, labels = c("Kama", "Rosa", "Canadian"))) +
+  labs(shape = "Plant type") +
+  geom_point(aes(colour = factor(km.out$cluster)), size = 4) +
+  labs(colour = "Cluster ID") +
+  geom_point(colour="grey90", size = 1.5) +
+  ggtitle("Clustering Results")
