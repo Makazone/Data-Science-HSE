@@ -194,50 +194,22 @@ N = nrow(data)
 target = full_data[, 'Tod'] 
 data   = as.data.frame(lapply(data, normalize))
 
-set.seed(1228)
-
-smp.size <- N - 1
+errorMatrix = matrix(0, 3, 3)
 for (i in 1:N) {
-  values = c(1:N)
-  remove = c(i)
-  setdiff(values, remove)
+  train.id = i
   
-  train.id <- sample(values, size = smp.size)
+  data.train = data[-train.id,]
+  data.test  = data[train.id,]
   
-  data.train <- data[train.id,]
-  data.test <- data[-train.id,]
-  target.train  <- target[train.id]
-  target.test <- target[-train.id]
+  target.train = target[-train.id]
+  target.test  = target[train.id]
   
-  target.predict = knn(data.train, data.test, target.train, k = 1)
-  tab_1 = table(target.predict, target.test)
-  
-  target.predict <- knn(data.train, data.test, target.train, k = 3)
-  tab_2 = table(target.predict, target.test)
-  
-  target.predict  <- knn(data, data, full_data[, "Tod"], k = 3)
-  tab_3 = table(target.predict, full_data$Tod)
-  
-  target.predict = knn(data.train, data.test, target.train, k = 7)
-  tab_4 = table(target.predict, target.test)
-  
-  if (i == 1) {
-    result_table_1 = tab_1
-    result_table_2 = tab_2
-    result_table_3 = tab_3
-    result_table_4 = tab_4
-  } else {
-    result_table_1 = result_table_1 + tab_1
-    result_table_2 = result_table_2 + tab_2
-    result_table_3 = result_table_3 + tab_3
-    result_table_4 = result_table_4 + tab_4
-  }
+  target.predict = knn(data.train, data.test, target.train, k = 3)
+  t1 = as.numeric(target.predict[1])
+  t2 = as.numeric(target.test[1])+1
+  errorMatrix[t1, t2] = errorMatrix[t1, t2] + 1
 }
-result_table_1
-result_table_2
-result_table_3
-result_table_4
-
+errorMatrix
 # ----------------- №4 - end -------------------
 
 # Метод номер два
@@ -269,7 +241,7 @@ data$Age_q = as.factor(data$Age_q)
 data[, "Age"] <- NULL
 
 # Leuc
-buckets = hist(data$Leuc, breaks=800)$breaks
+buckets = hist(data$Leuc, breaks=100)$breaks
 data$Leuc_q = 2
 for(i in 2:length(buckets)) {
   if (nrow(data[which(Leuc > buckets[i-1] & Leuc <= buckets[i]),]) > 0) {
@@ -329,5 +301,31 @@ table(pred, data[, "Tod"])
 # F = 0.5242331784
 
 # ----------------- №3 - end -------------------
+
+# ----------------- №4 - start -------------------
+
+# Don't forget to run code from previous step to convert data to factors 
+N = nrow(data)
+
+errorMatrix = matrix(0, 3, 3)
+for (i in 1:N) {
+  train.id = i
+  
+  data.train = data[-train.id,]
+  data.test  = data[train.id,]
+  
+  target.train = data[-train.id]
+  target.test  = target[train.id]
+  
+  model = naiveBayes(data.train$Tod ~ ., data = data.train[, 2:ncol(data.train)])
+  pred  = predict(model, data.test)
+  #table(pred, data[, "Tod"])
+
+  t1 = as.numeric(target.predict[1])
+  t2 = as.numeric(target.test[1])+1
+  errorMatrix[t1, t2] = errorMatrix[t1, t2] + 1
+}
+errorMatrix
+# ----------------- №4 - end -------------------
 
 # P.S.: Все комментарии были написаны в невменяемом состоянии. Возможно, они помогут накрапать отчёт
