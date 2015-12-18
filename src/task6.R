@@ -1,3 +1,6 @@
+# Before running, make sure those guys are onboard
+# install.packages(c("e1071","class","ggplot2"))
+
 library(e1071)
 library(class)
 library(ggplot2)
@@ -15,6 +18,7 @@ normalizeByMean = function(x) {
   y
 }
 
+# Alright, guess we can start rolling!
 # ─────────────NYA────────────────────────
 # ───▐▀▄───────▄▀▌───▄▄▄▄▄▄▄─────────────
 # ───▌▒▒▀▄▄▄▄▄▀▒▒▐▄▀▀▒██▒██▒▀▀▄──────────
