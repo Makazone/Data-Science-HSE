@@ -85,12 +85,13 @@ AnomalousPattern = function(data, normalized = TRUE) {
   
   # Initial setting: Put a tentative centroid, c, as the entity farthest away from the origin, 0.
   c = c()
-  minDist = Inf
+  maxDist = -Inf
   for (i in 1:nrow(data)) {
     d = dist(rbind(data[i,], a))
-    if (minDist > d) {
+    if (maxDist < d) {
       c = data[i,]
-      minDist = d
+      maxDist = d
+#      print('u')
     }
   }
   
