@@ -251,54 +251,24 @@ full_data = read.table("data/seeds_dataset.txt")
 colnames(full_data) = c("Area", "Perimeter", "Compactness", "Length_k", "Width_k", "Asymmetry", "Groove_g", "Type")
 
 full_data = subset(full_data, select = -Compactness)
-s = svd(full_data)
+
+data = subset(full_data, select = -Type)
+data = as.data.frame(lapply(data, normalizeByMean))
+
+s = svd(data)
 pc.use = c(1,2)
 data = s$u[,pc.use] %*% diag(s$d[pc.use], length(pc.use), length(pc.use)) %*% t(s$v[,pc.use])
 
-# 2 главных - "Length_k", "Width_k"
-data = data[, 3:4]
+data = as.data.frame(data)
+colnames(data) = c("Area", "Perimeter", "Length_k", "Width_k", "Asymmetry", "Groove_g")
 
-# теперь их кластеризуем и рисуем
-hc.complete=hclust(dist(data), method="complete")
-hc.average=hclust(dist(data), method="average")
-hc.single=hclust(dist(data), method="single")
+km.out = kmeans(data, c)
+# km.out$cluster
 
-par(mfrow=c(1,3))
-plot(hc.complete,main="Complete Linkage", xlab="", sub="", cex=.9)
-plot(hc.average, main="Average Linkage", xlab="", sub="", cex=.9)
-plot(hc.single, main="Single Linkage", xlab="", sub="", cex=.9)
-
-cutree(hc.complete, 2)
-cutree(hc.average, 2)
-cutree(hc.single, 2)
-cutree(hc.single, 4)
-plot(data, col = cutree(hc.complete, 2))
-plot(data, col = cutree(hc.single, 2))
-plot(data, col = cutree(hc.average, 2))
-
-par(mfrow=c(1,3))
-plot(hc.complete,main="Complete Linkage, 2 clusters", xlab="", sub="", cex=.9)
-rect.hclust(hc.complete, k=2, border="red")
-plot(hc.complete,main="Complete Linkage, 3 clusters", xlab="", sub="", cex=.9)
-rect.hclust(hc.complete, k=3, border="red")
-plot(hc.complete,main="Complete Linkage, 4 clusters", xlab="", sub="", cex=.9)
-rect.hclust(hc.complete, k=4, border="red")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ggplot(data, aes(Area, Groove_g)) + 
+  aes(shape = factor(full_data$Type, labels = c("Kama", "Rosa", "Canadian"))) +
+  labs(shape = "Plant type") +
+  geom_point(aes(colour = factor(km.out$cluster)), size = 4) +
+  labs(colour = "Cluster ID") +
+  geom_point(colour="grey90", size = 1.5) +
+  ggtitle("PCA Clustering Results")
