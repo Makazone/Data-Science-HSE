@@ -56,10 +56,10 @@ full_data = subset(full_data, select = -Compactness)
 
 data = subset(full_data, select = -Type)
 data = as.data.frame(lapply(data, normalize))
-km.out=kmeans(data, 4, nstart=20)
+km.out=kmeans(data, 3, nstart=20)
 #km.out$cluster
 
-ggplot(data, aes(Area, Groove_g)) + 
+ggplot(data, aes(Length_k, Width_k)) + 
   aes(shape = factor(full_data$Type, labels = c("Kama", "Rosa", "Canadian"))) +
   labs(shape = "Plant type") +
   geom_point(aes(colour = factor(km.out$cluster)), size = 4) +
