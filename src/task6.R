@@ -265,7 +265,8 @@ colnames(data) = c("Area", "Perimeter", "Length_k", "Width_k", "Asymmetry", "Gro
 km.out = kmeans(data, c)
 # km.out$cluster
 
-ggplot(data, aes(Area, Groove_g)) + 
+dataInPCASpace = as.data.frame(s$u[, pc.use])
+ggplot(dataInPCASpace, aes(V1, V2)) + 
   aes(shape = factor(full_data$Type, labels = c("Kama", "Rosa", "Canadian"))) +
   labs(shape = "Plant type") +
   geom_point(aes(colour = factor(km.out$cluster)), size = 4) +
